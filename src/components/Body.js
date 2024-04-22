@@ -9,7 +9,7 @@ console.log(myState);
   return (
     <>
     {
-        myState.map(e=><MicroCard title={e.title} author={e.author} cover_image={e.cover_image} />)
+        myState.map((e, idx)=><MicroCard title={e.title} author={e.author} cover_image={e.cover_image} id={e._id}/>)
     }
     </>
   )

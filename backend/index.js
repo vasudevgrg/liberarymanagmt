@@ -46,9 +46,12 @@ const admin_lib = new mongoose.Schema({
 });
 const book = new mongoose.Schema({
   title: String,
+  author: String,
   description: String,
-  price: Number,
-  image: String,
+  cover_image: String,
+  genre: Array,
+  publication_year: Number,
+  
   
 });
 
@@ -65,7 +68,7 @@ const user_lib = new mongoose.Schema({
   });
 
 const Admin = new mongoose.model("Admin", admin_lib);
-const Book = new mongoose.model("Course", book);
+const Book = new mongoose.model("book", book);
 
 
 
@@ -127,10 +130,15 @@ app.post("/signup", async (req, res) => {
     } catch {}
   });
 
+  app.get("/admin/books", async (req, res)=>{
+    let books= await Book.find();
+    res.send(books);
+  })
+
 
   app.post("/admin/uploadbook", async (req, res)=>{
-    let {title, description,price, image }= req.body;
-    let book= new Book({title, description, price, image});
+    let {title, description,author, cover_image, genre , publication_year}= req.body;
+    let book= new Book({title, description,author, cover_image, genre , publication_year});
     await book.save();
 
     res.send({
@@ -180,4 +188,12 @@ app.post("/signup", async (req, res) => {
             })
         }
     })
+  });
+
+  app.get("/admin/getbook/:id", async (req, res)=>{
+    const id= req.params.id;
+    let book= await Book.findOne({_id: id});
+    res.send(book);
   })
+
+  app.listen(5002, ()=>console.log("connected to 5002"));

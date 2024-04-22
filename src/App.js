@@ -5,19 +5,24 @@ import { UseSelector, useDispatch } from 'react-redux';
 import { addBooks, editBooks, deleteBook } from './actions';
 import Body from './components/Body';
 import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
+import BookMainPage from './components/BookMainPage';
 
 function App() {
-  const dispatch= useDispatch();
-  useEffect(()=>{
-    fetch("https://freetestapi.com/api/v1/books?limit=5").then(e=>e.json()).then(e=>e.map((x)=>{dispatch(addBooks(x)); console.log(x);}));
-  }, []);
+
   
   
 
   return (
    <>
-   <Navbar/>
-   <Body/>
+   <BrowserRouter>
+   <Routes>
+    <Route  index element={<LandingPage/>} />
+    <Route element={<BookMainPage/>} path="/bookmainpage"/>
+   </Routes>
+   </BrowserRouter>
+  
    </>
   );
 }

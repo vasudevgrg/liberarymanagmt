@@ -20,3 +20,10 @@ export const deleteBook=(payload)=>{
     }
 }
 
+export const updateID=(payload)=>{
+    return {
+        type:"updateID",
+        payload:payload
+    }
+}
+

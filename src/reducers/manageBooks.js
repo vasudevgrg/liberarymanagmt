@@ -6,7 +6,10 @@ const manageBooks=(state=initialState, action)=>{
         return [...state, action.payload];
     }else if(action.type==="deleteBook"){
         return state.filter(e=>e._id=== action.payload);
-    }else{
+    }else if(action.type== "editBooks"){
+        
+    }
+    else{
         return state;
     }
 };

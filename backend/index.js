@@ -151,7 +151,7 @@ app.post("/signup", async (req, res) => {
     try {
         const id = req.params.id;
         console.log(id);
-        let { title, description, price, image } = req.body;
+        let { title, description, author, publication_year } = req.body;
     
         const val = Book.findOne({ _id: id });
     
@@ -159,15 +159,15 @@ app.post("/signup", async (req, res) => {
           title = val.title;
         } else if (description === "") {
           description = val.description;
-        } else if (price === "") {
-          price = val.price;
-        } else if (image == "") {
-          image = val.image;
+        } else if (author === "") {
+          author = val.author;
+        } else if (publication_year == "") {
+          publication_year = val.publication_year;
         }
     
         await Book.findOneAndUpdate(
           { _id: id },
-          { title, description, price, image }
+          { title, description, author, publication_year }
         );
         let arr = await Book.find();
         console.log(arr);

@@ -27,7 +27,7 @@ const BookMainPage = () => {
 
     </div>
     {
-      showModal && <Modal/>
+      showModal && <Modal setShowModal={setShowModal}/>
     }
     </>
   )

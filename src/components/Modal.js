@@ -3,7 +3,7 @@ import './Modal.css';
 import { useDispatch, useSelector } from 'react-redux';
 
 
-const Modal = () => {
+const Modal = ({setShowModal}) => {
 const [title, setTitle]= React.useState("");
 const [description, setDescription]= React.useState("");
 const [author, setAuthor]= React.useState("");
@@ -25,12 +25,12 @@ const handleUpdate=()=>{
             "author":author,
             "publication_year":publication_year
         })
-    }).then(e=>e.json()).then(e=>{dispatch() setOpen(false);});
+    }).then(e=>e.json()).then(e=>{dispatch(); setShowModal(false);});
 }
 
   return (
     <>
-    <div className="wrapper" onClick={()=>setOpen(false)}></div>
+    <div className="wrapper" onClick={()=>setShowModal(false)}></div>
 
     <div className="container" style={{display:"flex", flexDirection:"column", margin:"10px"}}>
         <label>Update title:</label>

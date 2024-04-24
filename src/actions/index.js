@@ -27,3 +27,10 @@ export const updateID=(payload)=>{
     }
 }
 
+export const addUsers= (e)=>{
+    return {
+        type: "addUsers",
+        payload: e
+    }
+}
+

@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyparser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const { Schema } = require("@mui/icons-material");
 
 const app = express();
 
@@ -51,7 +52,10 @@ const book = new mongoose.Schema({
   cover_image: String,
   genre: Array,
   publication_year: Number,
-  
+  current_reader:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User_Lib"
+  }
   
 });
 
@@ -61,18 +65,15 @@ const user_lib = new mongoose.Schema({
     token: String,
     books: [
       {
-        bookID: String,
-        count: Number,
-      },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book"
+      }
     ],
   });
 
 const Admin = new mongoose.model("Admin", admin_lib);
 const Book = new mongoose.model("book", book);
-
-
-
-const User = new mongoose.model("User", user_lib);
+const User_Lib = new mongoose.model("User", user_lib);
 
 const secret = "secret";
 
@@ -90,11 +91,11 @@ app.post("/signup", async (req, res) => {
           await admin.save();
           res.send("user created");
         } else {
-          const user = new User({
+          const user = new User_Lib({
             username: username,
             password: password,
             token: token,
-            courses: [],
+            books: [],
           });
   
           await user.save();
@@ -121,7 +122,7 @@ app.post("/signup", async (req, res) => {
           type: "admin",
         });
       } else {
-          let val1 = await User.findOne({ username, password });
+          let val1 = await User_Lib.findOne({ username, password });
         res.send({
           token: val1.token,
           type: "user",
@@ -194,6 +195,14 @@ app.post("/signup", async (req, res) => {
     const id= req.params.id;
     let book= await Book.findOne({_id: id});
     res.send(book);
+  });
+
+
+
+
+  app.get("/user/allusers", async (req, res)=>{
+    let users= await User_Lib.find({});
+    res.send(users);
   })
 
   app.listen(5002, ()=>console.log("connected to 5002"));

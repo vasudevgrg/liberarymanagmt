@@ -45,6 +45,19 @@ const admin_lib = new mongoose.Schema({
   password: String,
   token: String,
 });
+const user_lib = new mongoose.Schema({
+  username: String,
+  password: String,
+  token: String,
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
+});
+const User_Lib = new mongoose.model("User", user_lib);
+
 const book = new mongoose.Schema({
   title: String,
   author: String,
@@ -60,21 +73,11 @@ const book = new mongoose.Schema({
   date_time: Date
 });
 
-const user_lib = new mongoose.Schema({
-  username: String,
-  password: String,
-  token: String,
-  books: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-  ],
-});
+
 
 const Admin = new mongoose.model("Admin", admin_lib);
 const Book = new mongoose.model("book", book);
-const User_Lib = new mongoose.model("User", user_lib);
+
 
 const secret = "secret";
 
@@ -157,6 +160,25 @@ app.post("/admin/uploadbook", async (req, res) => {
   });
 });
 
+app.put("/admin/updateuser/:id", async (req, res)=>{
+  try{
+    const id= req.params.id;
+
+    let {current_reader, date_time}= req.body;
+    console.log(current_reader);
+    const book1= await Book.findOne({_id: id});
+   
+    await Book.updateOne({_id: id}, {current_reader: current_reader, date_time: date_time}, {
+      new: true
+    });
+    console.log(book1);
+    await book1.save();
+    res.send("book updated");
+  }catch{
+    res.send("error in updating");
+  }
+})
+
 app.put("/admin/editbook/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -181,7 +203,7 @@ app.put("/admin/editbook/:id", async (req, res) => {
 
     await Book.findOneAndUpdate(
       { _id: id },
-      { title, description, author, publication_year }
+      { title, description, author, publication_year, current_reader, date_time }
     );
     let arr = await Book.find();
     console.log(arr);

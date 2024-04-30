@@ -11,6 +11,9 @@ const MicroCard = ({title, author, cover_image, id}) => {
     const [dropdown, setDropdown]= useState([]);
     const [issued, setIssued]= useState(false);
     const [processing, setProcessing]= useState(false);
+    const [notIssued , setNotIssued]= useState(true);
+    const [userwithbook, setUserwithbook]= useState({});
+    const [date, setDate]= useState("");
    
   const navigate= useNavigate();
   const dispatch= useDispatch();
@@ -39,9 +42,27 @@ useEffect(()=>{
                 'token':localStorage.getItem("token")   
             }
         }).then(e=>e.json()).then(e=>{
+            const date= new Date();
+            console.log(date);
+
             setProcessing(false);
-            console.log(e);
-        })
+            setUserwithbook(e.user);
+            setNotIssued(false);
+            setDate(date);
+            console.log(e.user);
+        });
+
+        fetch(`http://localhost:5002/admin/updateuser/${id}`, {
+            method:"PUT",
+            body: JSON.stringify({
+                "current_reader":userwithbook._id,
+                "date_time": date
+            }),
+            headers:{
+                'Content-Type':'application/json',
+                'token':localStorage.getItem("token")   
+            }
+        }).then(e=>e.json()).then(e=>console.log(e)).catch(e=>console.log(e));
   }
   
   return (
@@ -66,7 +87,7 @@ useEffect(()=>{
         </div>
     }
     {
-
+        !notIssued && <><FiberManualRecordSharpIcon style={{color:"red"}} /> {userwithbook.username} {} </>
     }
 
 </div>

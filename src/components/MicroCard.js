@@ -61,9 +61,9 @@ useEffect(()=>{
     {
         processing && 
         
-        <><input onChange={e=>{setDropdown(users.filter(x=>x.username.includes(e.target.value)))}}/>
-        <div className="dropdown">{dropdown.map((e)=><div onClick={()=>handleUpdateBookStatus(id, e._id)}>{e.username} {e._id}</div>)}{ console.log(dropdown)}</div>
-        </>
+        <div style={{display:"flex", flexDirection:"column"}}><input onChange={e=>{setDropdown(users.filter(x=>x.username.includes(e.target.value)))}}/>
+        <div className="dropdown">{dropdown.map((e)=><div onClick={()=>handleUpdateBookStatus(id, e._id)} style={{zIndex:"auto"}} >{e.username} {e._id}</div>)}{ console.log(dropdown)}</div>
+        </div>
     }
     {
 

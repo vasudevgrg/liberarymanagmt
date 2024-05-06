@@ -69,7 +69,7 @@ const book = new mongoose.Schema({
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: "User_Lib",
   // },
-  current_reader:{type: mongoose.Schema.Types.ObjectId, ref: "User_Lib"},
+  current_reader:{type:mongoose.Schema.Types.ObjectId},
   date_time: Date
 });
 
@@ -160,20 +160,21 @@ app.post("/admin/uploadbook", async (req, res) => {
   });
 });
 
+//api to update which user is currently holding that book.
 app.put("/admin/updateuser/:id", async (req, res)=>{
   try{
     const id= req.params.id;
-
+    console.log(req.body);
     let {current_reader, date_time}= req.body;
-    console.log(current_reader);
+    console.log(current_reader+ " "+ date_time);
     const book1= await Book.findOne({_id: id});
    
-    await Book.updateOne({_id: id}, {current_reader: current_reader, date_time: date_time}, {
+    await Book.updateOne({_id: id}, {current_reader:current_reader, date_time: date_time}, {
       new: true
     });
-    console.log(book1);
+ 
     await book1.save();
-    res.send("book updated");
+    res.send({"message": "book updated", "book updated": book1});
   }catch{
     res.send("error in updating");
   }
@@ -244,8 +245,6 @@ app.put("/user/addbook/:id", async (req, res) => {
   try {
     let user = await User_Lib.findOne({ _id: id });
     // console.log(user);  we are fetching user correctly
-    console.log(bookid);
-    console.log(user.books);
  await User_Lib.updateOne({ _id: id }, { books: [...user.books, bookid] }, {
     new: true
    });
@@ -259,5 +258,37 @@ app.put("/user/addbook/:id", async (req, res) => {
     res.send("err");
   }
 });
+
+app.get("/user/books",async(req, res)=>{
+  let books= await Book.find({});
+  try{
+    res.json({
+      "books": books
+    })
+  }catch{
+    res.json({
+      "books":"books not found"
+    });
+  }
+});
+
+app.put("/user/updatebook/:id", async(req, res)=>{
+  try{
+    const id= req.params.id;
+
+    let {current_reader, date_time}= req.body;
+    console.log(current_reader);
+    const book1= await Book.findOne({_id: id});
+   
+    await Book.updateOne({_id: id}, {current_reader: current_reader, date_time: date_time}, {
+      new: true
+    });
+    console.log(book1);
+    await book1.save();
+    res.send({"message": "book updated"});
+  }catch{
+    res.send("error in updating");
+  }
+})
 
 app.listen(5002, () => console.log("connected to 5002"));

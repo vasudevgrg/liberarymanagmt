@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Navbar from './Navbar';
-import { Button, Modal } from '@mui/material';
+import { Button } from '@mui/material';
+import Modal from './Modal';
 
 const BookMainPage = () => {
     const [book, setBook]= useState({});
@@ -11,7 +12,7 @@ const BookMainPage = () => {
    useEffect(()=>{fetch(`http://localhost:5002/admin/getbook/${id}`).then(e=>e.json()).then(e=>setBook(e))});
 
    const handleEdit=()=>{
-
+      setShowModal(true);
    }
   return (
     <>

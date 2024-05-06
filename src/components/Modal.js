@@ -1,6 +1,7 @@
 import React from 'react';
 import './Modal.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { editBooks } from '../actions';
 
 
 const Modal = ({setShowModal}) => {
@@ -25,7 +26,7 @@ const handleUpdate=()=>{
             "author":author,
             "publication_year":publication_year
         })
-    }).then(e=>e.json()).then(e=>{dispatch(); setShowModal(false);});
+    }).then(e=>e.json()).then(e=>{dispatch(editBooks(e.arr)); setShowModal(false);});
 }
 
   return (

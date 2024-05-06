@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import { addUsers, updateID } from '../actions';
 import FiberManualRecordSharpIcon from '@mui/icons-material/FiberManualRecordSharp';
 import Button from '@mui/material/Button';
-import SelectSearch from 'react-select-search';
+
 
 const MicroCard = ({title, author, cover_image, id}) => {
     const [value, setValue]= useState("");
@@ -12,8 +12,8 @@ const MicroCard = ({title, author, cover_image, id}) => {
     const [issued, setIssued]= useState(false);
     const [processing, setProcessing]= useState(false);
     const [notIssued , setNotIssued]= useState(true);
-    const [userwithbook, setUserwithbook]= useState({});
-    const [date, setDate]= useState("");
+    const [userwithbook, setUserwithbook]= useState({username:"", password:"", token: "", books:[], _id:""});
+    const [date, setDate]= useState(new Date());
    
   const navigate= useNavigate();
   const dispatch= useDispatch();
@@ -42,33 +42,44 @@ useEffect(()=>{
                 'token':localStorage.getItem("token")   
             }
         }).then(e=>e.json()).then(e=>{
-            const date= new Date();
-            console.log(date);
+            const date1= new Date();
+            console.log(date1);
 
             setProcessing(false);
-            setUserwithbook(e.user);
+            setUserwithbook({...userwithbook, username:e.user.username, _id:e.user._id});
             setNotIssued(false);
-            setDate(date);
-            console.log(e.user);
+            setDate(date1);
+            console.log(userwithbook);
+            console.log(date);
+
+            fetch(`http://localhost:5002/admin/updateuser/${id}`, {
+                method:"PUT",
+                body: JSON.stringify({
+                    "current_reader":userwithbook._id,
+                    "date_time": "date"
+                }),
+                headers:{
+                    'Content-Type':'application/json',
+                    'token':localStorage.getItem("token")   
+                }
+            }).then(e=>e.json()).then(e=>console.log(e)).catch(e=>console.log(e));
         });
 
-        fetch(`http://localhost:5002/admin/updateuser/${id}`, {
-            method:"PUT",
-            body: JSON.stringify({
-                "current_reader":userwithbook._id,
-                "date_time": date
-            }),
-            headers:{
-                'Content-Type':'application/json',
-                'token':localStorage.getItem("token")   
-            }
-        }).then(e=>e.json()).then(e=>console.log(e)).catch(e=>console.log(e));
+       
+  };
+
+  const handleMigrationToMainPage=(e)=>{
+    const event= e.target;
+    if(event.tagName!= "BUTTON" && event.tagName!= "INPUT" && event.tagName!="SPAN"){
+    dispatch(updateID(id)); 
+    navigate("/bookmainpage");
+    }
   }
   
   return (
 <>
 <div style={{display:"flex", flexDirection:"row", alignItems:"start", justifyContent:"space-between", padding:"15px", margin:"15px"}} 
-// onClick={()=>{dispatch(updateID(id)); navigate("/bookmainpage")}}
+onClick={handleMigrationToMainPage}
 >
 <img src={cover_image} style={{height:"3em",  width:"2em"}} />
 <div>{title}</div>
@@ -82,8 +93,10 @@ useEffect(()=>{
     {
         processing && 
         
-        <><input onChange={e=>{setDropdown(users.filter(x=>x.username.includes(e.target.value)))}}/>
-        <div className="dropdown">{dropdown.map((e)=><div onClick={()=>handleUpdateBookStatus(id, e._id)}>{e.username} {e._id}</div>)}{ console.log(dropdown)}</div>
+        <><FiberManualRecordSharpIcon style={{color:"yellow"}} />
+        <div style={{display:"flex", flexDirection:"column"}}>
+        <input onChange={e=>{setDropdown(users.filter(x=>x.username.includes(e.target.value)))}}/>
+        <div className="dropdown">{dropdown.map((e)=><span onClick={()=>handleUpdateBookStatus(id, e._id)}>{e.username} {e._id}</span>)}{ console.log(dropdown)}</div></div>
         </>
     }
     {

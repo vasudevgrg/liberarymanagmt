@@ -1,0 +1,12 @@
+1. on selection of arabic content, direction change button is not working
+<!-- 2. on pasting content in allready ongoing bulleted list, pasting happens in next line.Dont get pasted on same line, which leaves that bulleted list empty.
+3. when we start selection of paragraph from left to right and when we move to next line, it should get selected in Left to right manner but it is selecting in RTL manner. -->
+
+4. Quote and Citation emphasis and "Italic" is not working and leaving square marks but showing fine in preview.
+5.  Direction change buttons not working on selection.
+6. There is re-arrangement in words when "Test Highlight color" is applied to body text.
+      Specifically, highlighted text is starting that line and next line.
+      But it is showing its expected behaviour when we apply "Text HighLight Text" on an text with allready "Font Color" style.
+
+7. Selection of content in any line gets entrupted and changes its direction when an english word is encountered.
+8. An popup appears when we try to paste content inside table. Able to paste only when we add something from keyboard.

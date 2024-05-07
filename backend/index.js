@@ -91,28 +91,42 @@ const imageModel= new mongoose.model("Image", imageSchema);
 
 const secret = "secret";
 
-//multer
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
-  }
-})
+
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + '-' + Date.now())
+//   }
+// })
  
-var upload = multer({ storage: storage })
+// var upload = multer({ storage: storage })
 
 
-app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
-  const file = req.file
-  if (!file) {
-    const error = new Error('Please upload a file')
-    error.httpStatusCode = 400
-    return next(error)
-  }
-    res.send(file)
+// app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+//   const file = req.file
+//   if (!file) {
+//     const error = new Error('Please upload a file')
+//     error.httpStatusCode = 400
+//     return next(error)
+//   }
+//     res.send(file);
   
+// })
+
+const upload = multer({ dest: 'uploads/' })
+
+
+
+app.post('/profile', upload.single('avatar'), function (req, res, next) {
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+  try{
+    res.send({message:"file uploaded"});
+  }catch{
+    res.send({message:"error in uploading file"});
+  }
 })
 
 app.post("/signup", async (req, res) => {

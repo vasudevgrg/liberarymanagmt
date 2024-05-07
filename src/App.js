@@ -1,13 +1,11 @@
-import logo from './logo.svg';
+
 import './App.css';
-import Navbar from "../src/components/Navbar";
-import { UseSelector, useDispatch } from 'react-redux';
-import { addBooks, editBooks, deleteBook } from './actions';
-import Body from './components/Body';
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import BookMainPage from './components/BookMainPage';
+import UserLandingPage from './UserSideComponents/UserLandingPage';
+import Login from './components/Login';
+
 
 function App() {
 
@@ -18,8 +16,10 @@ function App() {
    <>
    <BrowserRouter>
    <Routes>
-    <Route  index element={<LandingPage/>} />
+    <Route  index element={<Login/>} />
+    <Route element={<LandingPage/>} path='/landingpage'/>
     <Route element={<BookMainPage/>} path="/bookmainpage"/>
+    <Route element={<UserLandingPage/>} path="/userlandingpage" />
    </Routes>
    </BrowserRouter>
   

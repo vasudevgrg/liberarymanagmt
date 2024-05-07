@@ -5,6 +5,8 @@ const bodyparser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { Schema } = require("@mui/icons-material");
+const multer= require("multer");
+const path= require("path");
 
 const app = express();
 
@@ -79,7 +81,39 @@ const Admin = new mongoose.model("Admin", admin_lib);
 const Book = new mongoose.model("book", book);
 
 
+const imageSchema= new mongoose.Schema({
+  name: String,
+  contentType:String, 
+  imageUrl: String
+});
+
+const imageModel= new mongoose.model("Image", imageSchema);
+
 const secret = "secret";
+
+//multer
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
+ 
+var upload = multer({ storage: storage })
+
+
+app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+  const file = req.file
+  if (!file) {
+    const error = new Error('Please upload a file')
+    error.httpStatusCode = 400
+    return next(error)
+  }
+    res.send(file)
+  
+})
 
 app.post("/signup", async (req, res) => {
   const { username, password } = req.body;
@@ -128,10 +162,13 @@ app.post("/login", async (req, res) => {
       let val1 = await User_Lib.findOne({ username, password });
       res.send({
         token: val1.token,
+        id: val1._id,
         type: "user",
       });
     }
-  } catch {}
+  } catch {
+    res.send({"message":"false credincials..!!"});
+  }
 });
 
 app.get("/admin/books", async (req, res) => {
@@ -255,7 +292,7 @@ app.put("/user/addbook/:id", async (req, res) => {
       "user": user
     })
   } catch {
-    res.send("err");
+    res.send({"message":"err"});
   }
 });
 

@@ -7,12 +7,16 @@ import { addBooks } from '../actions'
 const UserLandingPage = () => {
     const allBooks= useSelector(e=>e.manageBooks);
     const dispatch= useDispatch();
-    useEffect(fetch("http://localhost:5002/user/books").then(e=>e.json()).then(e=>e.map(ei=>dispatch(addBooks(ei)))));
+    useEffect(()=>{
+      fetch("http://localhost:5002/user/books").then(e=>e.json()).then(e=>{console.log(e);e.books.map(ei=>dispatch(addBooks(ei)));})
+    }, []);
+
+    console.log(allBooks);
   return (
     <>
     <Navbar/>
     {
-      allBooks.map(e=><UserMicroCard title={e.title} author={e.author} description={e.description} date_time= {e.date_time} id={e._id} />)
+      allBooks.map(e=><UserMicroCard cover_image={e.cover_image} title={e.title} author={e.author} description={e.description} date_time= {e.date_time} id={e._id} />)
     }
     </>
   )
